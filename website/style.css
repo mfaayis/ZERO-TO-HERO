@@ -290,13 +290,62 @@ section { position: relative; z-index: 1; }
 
 /* ── Page Hero (inner pages) ── */
 .page-hero {
-  padding: 160px 0 100px;
+  padding: 130px 0 50px;
   text-align: center;
   position: relative;
 }
 .page-hero-bg {
   position: absolute; inset: 0;
   background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.15) 0%, transparent 70%);
+}
+
+/* ── CTA Banner (shared across pages) ── */
+.cta-banner {
+  background: linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(79,70,229,0.1) 50%, rgba(14,165,233,0.08) 100%);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: var(--radius-xl);
+  padding: 5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.2) 0%, transparent 60%);
+}
+.cta-banner-content { position: relative; z-index: 1; }
+.cta-banner h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+}
+.cta-banner p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+}
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── Stat number (shared) ── */
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
 }
 
 /* ── Footer ── */
