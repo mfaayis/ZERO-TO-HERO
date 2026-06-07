@@ -5,11 +5,14 @@
  */
 
 /* ── PAGE LOADER ─────────────────────────────────────────────────────────── */
+// Always dismiss the loader — guaranteed, never blank
+setTimeout(() => {
+  const loader = document.getElementById('page-loader');
+  if (loader) loader.classList.add('hidden');
+}, 800);
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('page-loader');
-    if (loader) loader.classList.add('hidden');
-  }, 1500);
+  const loader = document.getElementById('page-loader');
+  if (loader) loader.classList.add('hidden');
 });
 
 /* ── SCROLL PROGRESS BAR ─────────────────────────────────────────────────── */
@@ -50,7 +53,7 @@ const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 /* ── SMOOTH ANCHOR SCROLL ────────────────────────────────────────────────── */
@@ -120,14 +123,12 @@ document.querySelectorAll('.progress-bar').forEach(bar => {
   function draw() {
     ctx.clearRect(0, 0, W, H);
     particles.forEach(p => {
-      // drift toward mouse slightly
       const dx = mouseX - p.x, dy = mouseY - p.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < 250) {
         p.vx += dx / dist * 0.008;
         p.vy += dy / dist * 0.008;
       }
-      // clamp speed
       const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
       if (speed > 0.8) { p.vx /= speed * 1.2; p.vy /= speed * 1.2; }
 
@@ -142,7 +143,6 @@ document.querySelectorAll('.progress-bar').forEach(bar => {
       ctx.fill();
     });
 
-    // draw connecting lines
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
@@ -198,21 +198,16 @@ document.querySelectorAll('.progress-bar').forEach(bar => {
     });
   });
 
-  // Clickable demo tasks
   ['demo-task-1', 'demo-task-2'].forEach(id => {
     const task = document.getElementById(id);
     if (!task) return;
     task.addEventListener('click', () => {
       task.classList.toggle('done');
-      // tiny XP flash
       const xp = task.querySelector('.task-xp');
       if (xp) {
         xp.style.background = 'rgba(52,211,153,0.25)';
         xp.style.color = '#34d399';
-        setTimeout(() => {
-          xp.style.background = '';
-          xp.style.color = '';
-        }, 600);
+        setTimeout(() => { xp.style.background = ''; xp.style.color = ''; }, 600);
       }
     });
   });
@@ -228,11 +223,11 @@ document.querySelectorAll('.progress-bar').forEach(bar => {
 
   let current = 0;
   const cards = track.querySelectorAll('.testimonial-card');
-  const total = Math.max(cards.length - 2, 1); // visible positions
+  const total = Math.max(cards.length - 2, 1);
 
   function goTo(index) {
     current = Math.max(0, Math.min(index, total - 1));
-    const cardWidth = cards[0].offsetWidth + 24; // gap
+    const cardWidth = cards[0].offsetWidth + 24;
     track.style.transform = `translateX(-${current * cardWidth}px)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
   }
@@ -241,12 +236,10 @@ document.querySelectorAll('.progress-bar').forEach(bar => {
   nextBtn?.addEventListener('click', () => goTo(current + 1));
   dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
 
-  // Auto-advance
   let autoTimer = setInterval(() => goTo((current + 1) % total), 5000);
   track.addEventListener('mouseenter', () => clearInterval(autoTimer));
   track.addEventListener('mouseleave', () => { autoTimer = setInterval(() => goTo((current + 1) % total), 5000); });
 
-  // Touch swipe
   let startX = 0;
   track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
   track.addEventListener('touchend', e => {
@@ -333,7 +326,7 @@ if (contactForm) {
   animate();
 })();
 
-/* ── ADD SPIN KEYFRAME ───────────────────────────────────────────────────── */
+/* ── SPIN KEYFRAME ───────────────────────────────────────────────────────── */
 const styleEl = document.createElement('style');
 styleEl.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
 document.head.appendChild(styleEl);
