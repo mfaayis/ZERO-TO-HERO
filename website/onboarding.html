@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Analysis — Limitless ⚡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#05050d;color:#f1f0ff;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+    
+    .wrap{width:100%;max-width:560px}
+    
+    /* Progress */
+    .progress-track{display:flex;align-items:center;gap:0.5rem;margin-bottom:2.5rem;justify-content:center}
+    .progress-step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;border:2px solid rgba(255,255,255,0.1);color:rgba(160,157,192,0.4);transition:all 0.3s}
+    .progress-step.active{border-color:#8b5cf6;color:#a78bfa;background:rgba(139,92,246,0.15);box-shadow:0 0 12px rgba(139,92,246,0.3)}
+    .progress-step.done{border-color:#34d399;background:rgba(52,211,153,0.15);color:#34d399}
+    .progress-line{flex:1;height:2px;background:rgba(255,255,255,0.07);border-radius:99px;max-width:60px}
+    .progress-line.done{background:rgba(52,211,153,0.4)}
+
+    /* Step panels */
+    .step{display:none;animation:fadeIn 0.4s ease}
+    .step.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+    h2{font-family:'Outfit',sans-serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:900;margin-bottom:0.5rem;line-height:1.2}
+    .gradient-text{background:linear-gradient(135deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .sub{color:rgba(160,157,192,0.7);font-size:0.9rem;margin-bottom:2rem;line-height:1.6}
+
+    /* Life rating sliders */
+    .rate-grid{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem}
+    .rate-row{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:1rem 1.25rem}
+    .rate-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem}
+    .rate-label{font-size:0.85rem;font-weight:600}
+    .rate-val{font-size:0.85rem;font-weight:700;color:#a78bfa;min-width:20px;text-align:right}
+    .rate-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:99px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer}
+    .rate-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#22d3ee);cursor:pointer;box-shadow:0 0 8px rgba(139,92,246,0.5)}
+    .rate-desc{font-size:0.7rem;color:rgba(160,157,192,0.45);margin-top:0.3rem}
+
+    /* Choice pills */
+    .pill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.6rem;margin-bottom:2rem}
+    .pill{background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:0.9rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left}
+    .pill:hover{border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.08)}
+    .pill.selected{border-color:#8b5cf6;background:rgba(139,92,246,0.18)}
+    .pill-icon{font-size:1.4rem;margin-bottom:0.35rem}
+    .pill-name{font-size:0.85rem;font-weight:600;color:#f1f0ff}
+    .pill-desc{font-size:0.68rem;color:rgba(160,157,192,0.55);margin-top:0.15rem}
+
+    /* Goal options */
+    .goal-grid{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem}
+    .goal-opt{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:1rem 1.25rem;cursor:pointer;transition:all 0.2s}
+    .goal-opt:hover{border-color:rgba(139,92,246,0.3)}
+    .goal-opt.selected{border-color:#8b5cf6;background:rgba(139,92,246,0.15)}
+    .goal-opt-icon{font-size:1.6rem;flex-shrink:0}
+    .goal-opt-text strong{display:block;font-size:0.9rem;margin-bottom:0.1rem}
+    .goal-opt-text span{font-size:0.72rem;color:rgba(160,157,192,0.55)}
+
+    /* Analysis screen */
+    #step-analysis{text-align:center;padding:2rem 0}
+    .analysis-orb{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(14,165,233,0.2));border:2px solid rgba(139,92,246,0.4);display:flex;align-items:center;justify-content:center;font-size:3rem;margin:0 auto 2rem;animation:pulse 1.5s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(139,92,246,0.3)}50%{transform:scale(1.05);box-shadow:0 0 40px rgba(139,92,246,0.5)}}
+    .analysis-steps{text-align:left;display:flex;flex-direction:column;gap:0.6rem;margin:1.5rem 0}
+    .a-step{display:flex;align-items:center;gap:0.75rem;font-size:0.85rem;color:rgba(160,157,192,0.5);transition:color 0.3s}
+    .a-step.done{color:#34d399}.a-step.active{color:#f1f0ff}
+    .a-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);flex-shrink:0;transition:all 0.3s}
+    .a-step.done .a-dot{background:#34d399}.a-step.active .a-dot{background:#8b5cf6;box-shadow:0 0 8px rgba(139,92,246,0.6)}
+
+    /* Results */
+    .challenge-card{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(14,165,233,0.15));border:1px solid rgba(139,92,246,0.35);border-radius:20px;padding:1.75rem;margin-bottom:1.25rem}
+    .challenge-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);border-radius:99px;padding:0.3rem 0.9rem;font-size:0.72rem;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem}
+    .challenge-name{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;color:#f1f0ff;margin-bottom:0.5rem}
+    .challenge-desc{font-size:0.85rem;color:rgba(160,157,192,0.75);line-height:1.6;margin-bottom:1rem}
+    .challenge-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+    .ctag{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:99px;padding:0.25rem 0.7rem;font-size:0.68rem;color:rgba(160,157,192,0.7);font-weight:500}
+    
+    .insight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1.25rem}
+    .insight{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:0.9rem;text-align:center}
+    .insight-val{font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .insight-lbl{font-size:0.65rem;color:rgba(160,157,192,0.55);text-transform:uppercase;letter-spacing:0.05em;margin-top:0.2rem;font-weight:600}
+
+    /* Buttons */
+    .btn-next{width:100%;background:linear-gradient(135deg,#7c3aed,#4f46e5,#0ea5e9);border:none;border-radius:99px;padding:1rem;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;color:white;cursor:pointer;transition:all 0.2s;box-shadow:0 0 30px rgba(139,92,246,0.35);margin-top:0.5rem}
+    .btn-next:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(139,92,246,0.5)}
+    .btn-next:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+    .btn-back{background:none;border:1px solid rgba(255,255,255,0.1);border-radius:99px;padding:0.6rem 1.2rem;color:rgba(160,157,192,0.6);font-size:0.8rem;cursor:pointer;margin-bottom:1.5rem;font-family:'Inter',sans-serif;transition:all 0.2s}
+    .btn-back:hover{border-color:rgba(255,255,255,0.2);color:#f1f0ff}
+
+    .tag-hint{font-size:0.72rem;color:rgba(160,157,192,0.45);margin-bottom:0.75rem}
+    .error-msg{color:#f87171;font-size:0.78rem;margin-top:0.5rem;display:none}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Progress indicator -->
+  <div class="progress-track">
+    <div class="progress-step active" id="ps1">1</div>
+    <div class="progress-line" id="pl1"></div>
+    <div class="progress-step" id="ps2">2</div>
+    <div class="progress-line" id="pl2"></div>
+    <div class="progress-step" id="ps3">3</div>
+    <div class="progress-line" id="pl3"></div>
+    <div class="progress-step" id="ps4">🤖</div>
+    <div class="progress-line" id="pl4"></div>
+    <div class="progress-step" id="ps5">🏆</div>
+  </div>
+
+  <!-- STEP 1: Life Ratings -->
+  <div class="step active" id="step-1">
+    <h2>Let's Analyse <span class="gradient-text">Your Life Right Now</span></h2>
+    <p class="sub">Be honest — this is just for you. Rate each area from 1 (terrible) to 10 (excellent).</p>
+    <div class="rate-grid" id="rate-grid"></div>
+    <button class="btn-next" onclick="goStep(2)">Next →</button>
+  </div>
+
+  <!-- STEP 2: Struggles -->
+  <div class="step" id="step-2">
+    <button class="btn-back" onclick="goStep(1)">← Back</button>
+    <h2>What Are Your <span class="gradient-text">Biggest Struggles?</span></h2>
+    <p class="sub">Pick up to 3 things that are holding you back the most.</p>
+    <p class="tag-hint">Select up to 3</p>
+    <div class="pill-grid" id="struggles-grid"></div>
+    <div class="error-msg" id="err-struggle">Please select at least 1 struggle.</div>
+    <button class="btn-next" onclick="nextFromStruggles()">Next →</button>
+  </div>
+
+  <!-- STEP 3: Goal -->
+  <div class="step" id="step-3">
+    <button class="btn-back" onclick="goStep(2)">← Back</button>
+    <h2>What's Your <span class="gradient-text">#1 Goal</span> Right Now?</h2>
+    <p class="sub">Pick the ONE transformation you want most. Be decisive.</p>
+    <div class="goal-grid" id="goals-grid"></div>
+    <div class="error-msg" id="err-goal">Please select a goal.</div>
+    <button class="btn-next" onclick="nextFromGoal()">Analyse Me →</button>
+  </div>
+
+  <!-- STEP 4: AI Analysis -->
+  <div class="step" id="step-4" style="text-align:center;padding:1rem 0">
+    <div class="analysis-orb">🤖</div>
+    <h2>Analysing Your <span class="gradient-text">Profile</span></h2>
+    <p class="sub">Our AI is reviewing your answers and building your personalised plan...</p>
+    <div class="analysis-steps">
+      <div class="a-step active" id="as1"><div class="a-dot"></div>Reading your life scores...</div>
+      <div class="a-step" id="as2"><div class="a-dot"></div>Identifying your weak spots...</div>
+      <div class="a-step" id="as3"><div class="a-dot"></div>Matching you to the best challenge...</div>
+      <div class="a-step" id="as4"><div class="a-dot"></div>Building your daily mission plan...</div>
+      <div class="a-step" id="as5"><div class="a-dot"></div>Finalising your transformation protocol...</div>
+    </div>
+  </div>
+
+  <!-- STEP 5: Results -->
+  <div class="step" id="step-5">
+    <h2>Your <span class="gradient-text">Protocol is Ready</span> 🔥</h2>
+    <p class="sub">Based on your analysis, here's your personalised transformation plan.</p>
+    <div class="insight-row" id="insight-row"></div>
+    <div class="challenge-card" id="challenge-card"></div>
+    <button class="btn-next" onclick="enterDashboard()">Enter My Dashboard →</button>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const app  = initializeApp({ apiKey:"AIzaSyBYjZqEI9teJW5GrlsIP6ppjGUrKPn4cOY", authDomain:"limitless-94158.firebaseapp.com", projectId:"limitless-94158", storageBucket:"limitless-94158.firebasestorage.app", messagingSenderId:"879930848858", appId:"1:879930848858:web:1db0c9e6f9a6c8eb02ca63" });
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) { window.location.href = 'index.html'; return; }
+    window._uid = user.uid;
+    window._firstName = (user.displayName || 'Hero').split(' ')[0];
+    // If already onboarded, go dashboard
+    const saved = JSON.parse(localStorage.getItem('limitless_' + user.uid) || 'null');
+    if (saved && saved.onboarded) { window.location.href = 'dashboard.html'; }
+  });
+</script>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const AREAS = [
+  { id:'sleep',    label:'😴 Sleep Quality',      desc:'Hours & quality of your sleep' },
+  { id:'fitness',  label:'💪 Physical Health',     desc:'Exercise, diet & energy levels' },
+  { id:'focus',    label:'🧠 Focus & Productivity',desc:'Deep work, discipline, phone use' },
+  { id:'money',    label:'💰 Finances',            desc:'Savings, spending & income' },
+  { id:'social',   label:'🤝 Relationships',       desc:'Friends, family & networking' },
+  { id:'mindset',  label:'⚡ Mindset',             desc:'Confidence, resilience, positivity' },
+];
+
+const STRUGGLES = [
+  { id:'procrastination', icon:'😴', name:'Procrastination',     desc:'Putting things off daily' },
+  { id:'junkfood',        icon:'🍕', name:'Junk Food / Diet',    desc:'Poor eating habits' },
+  { id:'nosport',         icon:'🛋️', name:'No Exercise',         desc:'Inactive lifestyle' },
+  { id:'phoneaddiction',  icon:'📱', name:'Phone Addiction',     desc:'Too much screen time' },
+  { id:'nogoals',         icon:'🎯', name:'No Clear Goals',      desc:'Drifting without direction' },
+  { id:'negativemind',    icon:'🌧️', name:'Negative Thinking',   desc:'Self-doubt & anxiety' },
+  { id:'brokemind',       icon:'💸', name:'Money Problems',      desc:'Spending more than earning' },
+  { id:'lonely',          icon:'🙈', name:'Social Isolation',    desc:'Lack of meaningful connections' },
+];
+
+const GOALS = [
+  { id:'discipline', icon:'⚡', name:'Build Unbreakable Discipline',  desc:'Wake up at 5AM, no excuses, iron routine' },
+  { id:'fitness',    icon:'💪', name:'Transform My Body',             desc:'Lose fat, build muscle, feel incredible' },
+  { id:'focus',      icon:'🧠', name:'Master My Mind & Focus',        desc:'No more scrolling. Deep work only.' },
+  { id:'money',      icon:'💰', name:'Take Control of My Finances',   desc:'Save more, spend smart, build wealth' },
+  { id:'confidence', icon:'🔥', name:'Build Confidence & Social Life',desc:'Stop hiding. Own every room.' },
+  { id:'fulllife',   icon:'👑', name:'Complete Life Transformation',  desc:'All areas — the full Zero to Hero journey' },
+];
+
+const CHALLENGES = {
+  discipline: { name:'Iron Discipline Protocol', days:30, desc:'A brutal 30-day system to rewire your habits. Wake up at 5AM, no snooze, cold showers, 5 non-negotiable daily missions. By day 30 you\'re a different person.', tags:['5AM Wake Up','Cold Shower','No Excuses','Daily Missions','Streak Tracking'] },
+  fitness:    { name:'30-Day Body Transformation', days:30, desc:'Structured daily workouts (no gym needed), clean eating plan, hydration tracking, and weekly body check-ins. Built for real people, real results.', tags:['Daily Workout','Clean Eating','3L Water','Sleep 8hrs','Progress Photos'] },
+  focus:      { name:'Deep Focus Mastery', days:21, desc:'21 days to eliminate distractions and rebuild your focus. Phone-free mornings, 90-min deep work blocks, no social media before noon, journaling every night.', tags:['No Phone AM','Deep Work','Digital Detox','Evening Journal','Reading Habit'] },
+  money:      { name:'Financial Discipline Challenge', days:30, desc:'Track every rupee, cut 3 unnecessary expenses, set up savings automation, and learn one new income skill. Your bank account will thank you in 30 days.', tags:['Expense Tracking','No Impulse Buys','Save 20%','Invest Daily','Wealth Mindset'] },
+  confidence: { name:'Confidence Unlocked: 30 Days', days:30, desc:'Daily social challenges, affirmation practice, fitness for self-image, and weekly comfort zone expansions. Stop waiting to feel ready — just go.', tags:['1 Social Challenge/Day','Morning Affirmations','Eye Contact Practice','Workout Daily','No Approval Seeking'] },
+  fulllife:   { name:'Zero to Hero: 90-Day Protocol', days:90, desc:'The complete transformation. All 7 life areas tracked daily. Progressive missions that evolve every 30 days. The hardest challenge — and the most rewarding one.', tags:['All 7 Areas','Daily XP','Weekly Reviews','AI Coaching','Full Transformation'] },
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let ratings = { sleep:5, fitness:5, focus:5, money:5, social:5, mindset:5 };
+let selectedStruggles = [];
+let selectedGoal = '';
+
+// ── BUILD STEP 1 ──────────────────────────────────────────────────────────
+const rg = document.getElementById('rate-grid');
+AREAS.forEach(a => {
+  const div = document.createElement('div');
+  div.className = 'rate-row';
+  div.innerHTML = `
+    <div class="rate-header">
+      <span class="rate-label">${a.label}</span>
+      <span class="rate-val" id="rv-${a.id}">5</span>
+    </div>
+    <input type="range" min="1" max="10" value="5" class="rate-slider" id="rs-${a.id}" oninput="updateRate('${a.id}',this.value)" />
+    <div class="rate-desc">${a.desc}</div>
+  `;
+  rg.appendChild(div);
+});
+
+function updateRate(id, val) {
+  ratings[id] = parseInt(val);
+  document.getElementById('rv-' + id).textContent = val;
+}
+
+// ── BUILD STEP 2 ──────────────────────────────────────────────────────────
+const sg = document.getElementById('struggles-grid');
+STRUGGLES.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'pill';
+  div.id = 'pill-' + s.id;
+  div.innerHTML = `<div class="pill-icon">${s.icon}</div><div class="pill-name">${s.name}</div><div class="pill-desc">${s.desc}</div>`;
+  div.onclick = () => toggleStruggle(s.id);
+  sg.appendChild(div);
+});
+
+function toggleStruggle(id) {
+  const idx = selectedStruggles.indexOf(id);
+  if (idx > -1) {
+    selectedStruggles.splice(idx, 1);
+    document.getElementById('pill-' + id).classList.remove('selected');
+  } else if (selectedStruggles.length < 3) {
+    selectedStruggles.push(id);
+    document.getElementById('pill-' + id).classList.add('selected');
+  }
+  document.getElementById('err-struggle').style.display = 'none';
+}
+
+function nextFromStruggles() {
+  if (selectedStruggles.length === 0) { document.getElementById('err-struggle').style.display = 'block'; return; }
+  goStep(3);
+}
+
+// ── BUILD STEP 3 ──────────────────────────────────────────────────────────
+const gg = document.getElementById('goals-grid');
+GOALS.forEach(g => {
+  const div = document.createElement('div');
+  div.className = 'goal-opt';
+  div.id = 'goal-' + g.id;
+  div.innerHTML = `<div class="goal-opt-icon">${g.icon}</div><div class="goal-opt-text"><strong>${g.name}</strong><span>${g.desc}</span></div>`;
+  div.onclick = () => selectGoal(g.id);
+  gg.appendChild(div);
+});
+
+function selectGoal(id) {
+  document.querySelectorAll('.goal-opt').forEach(el => el.classList.remove('selected'));
+  document.getElementById('goal-' + id).classList.add('selected');
+  selectedGoal = id;
+  document.getElementById('err-goal').style.display = 'none';
+}
+
+function nextFromGoal() {
+  if (!selectedGoal) { document.getElementById('err-goal').style.display = 'block'; return; }
+  goStep(4);
+  runAnalysis();
+}
+
+// ── ANALYSIS ANIMATION ────────────────────────────────────────────────────
+function runAnalysis() {
+  const steps = ['as1','as2','as3','as4','as5'];
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i > 0) {
+      document.getElementById(steps[i-1]).classList.remove('active');
+      document.getElementById(steps[i-1]).classList.add('done');
+    }
+    if (i < steps.length) {
+      document.getElementById(steps[i]).classList.add('active');
+      i++;
+    } else {
+      clearInterval(interval);
+      setTimeout(() => buildResults(), 600);
+    }
+  }, 800);
+}
+
+// ── BUILD RESULTS ─────────────────────────────────────────────────────────
+function buildResults() {
+  const c = CHALLENGES[selectedGoal] || CHALLENGES['discipline'];
+  const avgScore = Math.round(Object.values(ratings).reduce((a,b)=>a+b,0)/6 * 10);
+  const weakArea = Object.entries(ratings).sort((a,b)=>a[1]-b[1])[0];
+  const weakLabel = AREAS.find(a=>a.id===weakArea[0])?.label.split(' ').slice(1).join(' ') || weakArea[0];
+
+  // Insights
+  document.getElementById('insight-row').innerHTML = `
+    <div class="insight"><div class="insight-val">${avgScore}%</div><div class="insight-lbl">Life Score</div></div>
+    <div class="insight"><div class="insight-val">${c.days}d</div><div class="insight-lbl">Challenge</div></div>
+    <div class="insight"><div class="insight-val">${selectedStruggles.length}</div><div class="insight-lbl">Weak Spots</div></div>
+  `;
+
+  // Challenge card
+  document.getElementById('challenge-card').innerHTML = `
+    <div class="challenge-badge">⚡ Your Challenge</div>
+    <div class="challenge-name">${c.name}</div>
+    <div class="challenge-desc">${c.desc}</div>
+    <div class="challenge-tags">${c.tags.map(t=>`<span class="ctag">${t}</span>`).join('')}</div>
+  `;
+
+  goStep(5);
+}
+
+// ── SAVE & GO DASHBOARD ───────────────────────────────────────────────────
+window.enterDashboard = function() {
+  if (!window._uid) { window.location.href = 'dashboard.html'; return; }
+  const c = CHALLENGES[selectedGoal] || CHALLENGES['discipline'];
+  const avgScore = Math.round(Object.values(ratings).reduce((a,b)=>a+b,0)/6 * 10);
+
+  const lifeScores = {
+    Health:     Math.round((ratings.fitness + ratings.sleep) / 2 * 10),
+    Discipline: ratings.focus * 10,
+    Finance:    ratings.money * 10,
+    Mindset:    ratings.mindset * 10,
+    Career:     ratings.focus * 10,
+    Learning:   50,
+    Relationships: ratings.social * 10,
+  };
+
+  const data = {
+    onboarded: true,
+    xp: 0, level: 1, streak: 1, day: 1,
+    lifeScores,
+    completedToday: [],
+    lastDate: new Date().toDateString(),
+    challenge: { id: selectedGoal, ...c },
+    struggles: selectedStruggles,
+    goal: selectedGoal,
+    initialScore: avgScore,
+  };
+
+  localStorage.setItem('limitless_' + window._uid, JSON.stringify(data));
+  window.location.href = 'dashboard.html';
+};
+
+// ── STEP NAV ──────────────────────────────────────────────────────────────
+window.goStep = function(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+
+  // Update progress
+  for (let i = 1; i <= 5; i++) {
+    const ps = document.getElementById('ps' + i);
+    const pl = document.getElementById('pl' + i);
+    if (i < n) { ps.classList.add('done'); ps.classList.remove('active'); if (pl) pl.classList.add('done'); }
+    else if (i === n) { ps.classList.add('active'); ps.classList.remove('done'); }
+    else { ps.classList.remove('active','done'); if (pl) pl.classList.remove('done'); }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.updateRate = updateRate;
+window.toggleStruggle = toggleStruggle;
+window.nextFromStruggles = nextFromStruggles;
+window.nextFromGoal = nextFromGoal;
+window.selectGoal = selectGoal;
+</script>
+</body>
+</html>
