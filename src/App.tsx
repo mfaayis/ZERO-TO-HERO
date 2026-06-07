@@ -35,9 +35,12 @@ import Analytics from "./components/Analytics";
 import Challenges from "./components/Challenges";
 import Community from "./components/Community";
 import Admin from "./components/Admin";
+import Onboarding from "./components/Onboarding";
+import Journey from "./components/Journey";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>("landing"); // 'landing', 'auth', 'dashboard', 'checklist', 'habits', 'goals', 'coach', 'journal', 'analytics', 'challenges', 'community', 'admin'
+  const [activeTab, setActiveTab] = useState<string>("landing");
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [authPlanSelected, setAuthPlanSelected] = useState<string | undefined>(undefined);
   
   // Real active user credential focus
@@ -134,7 +137,7 @@ export default function App() {
           xp: 15,
           xpToNextLevel: 100,
           streak: 1,
-          isPremium: authPlanSelected === "premium" || authPlanSelected === "enterprise",
+          isPremium: true, // Everything free for everyone 🎉
           lifeScores: { health: 60, discipline: 55, finance: 50, career: 50, learning: 65, relationships: 50, mindset: 55 },
           unlockedBadges: []
         };
@@ -165,6 +168,9 @@ export default function App() {
           goals: [],
           journals: []
         });
+
+        // Show onboarding for new users
+        setShowOnboarding(true);
       }
     } catch (error) {
       console.error("Firestore load error:", error);
@@ -269,26 +275,14 @@ export default function App() {
   // onAuthStateChanged (above) handles the actual session state — this just
   // applies the chosen focus area boost and shows the welcome toast.
   const handleAuthSuccess = (email: string, name: string, premiumOverride: boolean, firstFocus?: string) => {
-    // Inject starting multipliers based on preferred Focus Area
     setProfile(prev => {
       const scores = { ...prev.lifeScores };
       if (firstFocus && firstFocus in scores) {
         (scores as any)[firstFocus] = 80;
       }
-      return {
-        ...prev,
-        name: name,
-        email: email,
-        isPremium: premiumOverride,
-        lifeScores: scores
-      };
+      return { ...prev, name, email, isPremium: true, lifeScores: scores };
     });
-
-    pushToastNotification(
-      "Connection Approved",
-      `Welcome to Zero to Hero, Challenger ${name}! Your baseline statistics are now logged.`,
-      "info"
-    );
+    pushToastNotification("Welcome! 🚀", `Hey ${name}! Your transformation journey starts NOW.`, "info");
   };
 
   // Checklist actions
@@ -671,9 +665,21 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans" id="master-root">
-      
+
+      {/* Onboarding wizard — shown to new users */}
+      {showOnboarding && (
+        <Onboarding
+          userProfile={profile}
+          onComplete={(updates) => {
+            setProfile(prev => ({ ...prev, ...updates }));
+            setShowOnboarding(false);
+            setActiveTab("journey");
+          }}
+        />
+      )}
+
       {/* Visual Navigation header */}
-      {activeTab !== "landing" && activeTab !== "auth" && (
+      {!showOnboarding && activeTab !== "landing" && activeTab !== "auth" && (
         <Navigation 
           activeTab={activeTab} 
           onSelectTab={setActiveTab} 
@@ -683,6 +689,7 @@ export default function App() {
       )}
 
       {/* Main Container workspace viewports */}
+      {!showOnboarding && (
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-8" id="master-viewports">
         
         {/* LANDING GATE */}
@@ -699,6 +706,14 @@ export default function App() {
             onAuthSuccess={handleAuthSuccess} 
             onBackToHome={() => setActiveTab("landing")} 
             defaultPlan={authPlanSelected}
+          />
+        )}
+
+        {/* 🗺️ GUIDED JOURNEY (new default home) */}
+        {activeTab === "journey" && (
+          <Journey
+            userProfile={profile}
+            onUpdateProfile={(updates) => setProfile(prev => ({ ...prev, ...updates }))}
           />
         )}
 
@@ -816,6 +831,7 @@ export default function App() {
         )}
 
       </main>
+      )} {/* end !showOnboarding */}
 
       {/* Miniature viewport toast notification */}
       {notifications.length > 0 && !notifications[0].read && (
