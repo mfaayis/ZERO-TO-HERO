@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Limitless ⚡</title>
+  <meta name="description" content="Your personal transformation dashboard." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #05050d; color: #f1f0ff; font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+    /* ── TOP NAV ── */
+    .dash-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; background: rgba(12,12,24,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px);
+    }
+    .dash-nav-logo { font-family:'Outfit',sans-serif; font-weight:900; font-size:1.3rem; background:linear-gradient(135deg,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .dash-user { display:flex; align-items:center; gap:0.75rem; }
+    .dash-user img { width:36px; height:36px; border-radius:50%; border:2px solid rgba(139,92,246,0.4); object-fit:cover; }
+    .dash-user-name { font-size:0.85rem; font-weight:600; color:#f1f0ff; }
+    .btn-logout { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:99px; padding:0.4rem 1rem; font-size:0.75rem; color:rgba(160,157,192,0.8); cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; }
+    .btn-logout:hover { background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.3); color:#fca5a5; }
+
+    /* ── MAIN ── */
+    .dash-main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* ── WELCOME STRIP ── */
+    .welcome-strip {
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(14,165,233,0.15));
+      border: 1px solid rgba(139,92,246,0.25); border-radius: 20px;
+      padding: 1.75rem 2rem; margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .welcome-text h2 { font-family:'Outfit',sans-serif; font-size:clamp(1.4rem,3vw,1.9rem); font-weight:900; color:#f1f0ff; margin-bottom:0.3rem; }
+    .welcome-text p { color:rgba(160,157,192,0.75); font-size:0.9rem; }
+    .streak-badge { display:flex; align-items:center; gap:0.5rem; background:rgba(249,115,22,0.15); border:1px solid rgba(249,115,22,0.3); border-radius:99px; padding:0.5rem 1.2rem; font-weight:700; font-size:0.95rem; color:#fb923c; white-space:nowrap; }
+
+    /* ── STATS ROW ── */
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+    @media(max-width:640px){ .stats-row{ grid-template-columns:repeat(2,1fr); } }
+    .stat-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:1.25rem; text-align:center; transition:border-color 0.2s; }
+    .stat-card:hover { border-color:rgba(139,92,246,0.3); }
+    .stat-card-num { font-family:'Outfit',sans-serif; font-size:1.8rem; font-weight:900; background:linear-gradient(135deg,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .stat-card-lbl { font-size:0.72rem; color:rgba(160,157,192,0.6); text-transform:uppercase; letter-spacing:0.06em; margin-top:0.3rem; font-weight:600; }
+
+    /* ── GRID ── */
+    .dash-grid { display:grid; grid-template-columns:1fr 340px; gap:1.5rem; }
+    @media(max-width:900px){ .dash-grid{ grid-template-columns:1fr; } }
+
+    /* ── CARD BASE ── */
+    .d-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:1.5rem; margin-bottom:1.5rem; }
+    .d-card-title { font-family:'Outfit',sans-serif; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:rgba(167,139,250,0.8); margin-bottom:1.1rem; }
+
+    /* ── MISSIONS ── */
+    .mission-item { display:flex; align-items:center; gap:0.85rem; padding:0.85rem 1rem; border-radius:12px; margin-bottom:0.5rem; cursor:pointer; transition:background 0.15s; border:1px solid transparent; }
+    .mission-item:hover { background:rgba(255,255,255,0.04); }
+    .mission-item.done { opacity:0.55; }
+    .mission-check { width:22px; height:22px; border-radius:50%; border:2px solid rgba(139,92,246,0.5); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+    .mission-item.done .mission-check { background:rgba(52,211,153,0.2); border-color:#34d399; }
+    .mission-item.done .mission-check::after { content:'✓'; font-size:0.7rem; color:#34d399; font-weight:700; }
+    .mission-info { flex:1; }
+    .mission-title { font-size:0.9rem; font-weight:500; color:#f1f0ff; }
+    .mission-item.done .mission-title { text-decoration:line-through; color:rgba(160,157,192,0.5); }
+    .mission-cat { font-size:0.68rem; color:rgba(160,157,192,0.5); margin-top:0.15rem; }
+    .mission-xp { font-size:0.75rem; font-weight:700; color:#a78bfa; background:rgba(139,92,246,0.1); border-radius:99px; padding:0.2rem 0.6rem; white-space:nowrap; }
+    .xp-total { text-align:center; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.07); font-size:0.82rem; color:rgba(160,157,192,0.6); margin-top:0.5rem; }
+    .xp-total span { color:#a78bfa; font-weight:700; }
+
+    /* ── LIFE SCORES ── */
+    .score-row { margin-bottom:0.9rem; }
+    .score-label { display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:0.35rem; }
+    .score-name { color:rgba(160,157,192,0.8); font-weight:500; }
+    .score-val { color:#a78bfa; font-weight:700; }
+    .score-bar { height:6px; background:rgba(255,255,255,0.07); border-radius:99px; overflow:hidden; }
+    .score-fill { height:100%; border-radius:99px; transition:width 1s ease; }
+
+    /* ── QUOTE ── */
+    .quote-card { background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(14,165,233,0.1)); border:1px solid rgba(139,92,246,0.2); border-radius:16px; padding:1.25rem 1.5rem; margin-bottom:1.5rem; }
+    .quote-text { font-size:0.95rem; line-height:1.6; color:rgba(240,237,255,0.9); font-style:italic; margin-bottom:0.5rem; }
+    .quote-author { font-size:0.72rem; color:rgba(167,139,250,0.7); font-weight:600; }
+
+    /* ── JOURNEY MAP ── */
+    .journey-steps { display:flex; flex-direction:column; gap:0; }
+    .j-step { display:flex; gap:1rem; align-items:flex-start; }
+    .j-step-line { display:flex; flex-direction:column; align-items:center; }
+    .j-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0; }
+    .j-dot.done { background:rgba(52,211,153,0.2); border:2px solid #34d399; color:#34d399; }
+    .j-dot.active { background:rgba(139,92,246,0.3); border:2px solid #8b5cf6; color:#a78bfa; box-shadow:0 0 12px rgba(139,92,246,0.4); }
+    .j-dot.upcoming { background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.12); color:rgba(160,157,192,0.4); }
+    .j-line { width:2px; flex:1; min-height:24px; background:rgba(255,255,255,0.07); margin:4px 0; }
+    .j-content { padding-bottom:1.25rem; }
+    .j-title { font-size:0.85rem; font-weight:600; color:#f1f0ff; margin-bottom:0.15rem; }
+    .j-sub { font-size:0.72rem; color:rgba(160,157,192,0.5); }
+
+    /* ── XP BAR ── */
+    .xp-bar-wrap { margin-bottom:1rem; }
+    .xp-bar-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:rgba(160,157,192,0.6); margin-bottom:0.4rem; }
+    .xp-bar { height:8px; background:rgba(255,255,255,0.07); border-radius:99px; overflow:hidden; }
+    .xp-bar-fill { height:100%; background:linear-gradient(90deg,#7c3aed,#0ea5e9); border-radius:99px; transition:width 1.2s ease; }
+
+    /* ── AUTH OVERLAY ── */
+    #auth-overlay {
+      position:fixed; inset:0; z-index:9999;
+      background:radial-gradient(ellipse at 30% 20%,rgba(124,58,237,0.25) 0%,transparent 60%), radial-gradient(ellipse at 70% 80%,rgba(14,165,233,0.15) 0%,transparent 60%), #05050d;
+      display:flex; align-items:center; justify-content:center; padding:2rem;
+    }
+    .auth-box { width:100%; max-width:420px; text-align:center; }
+    .auth-logo { font-family:'Outfit',sans-serif; font-size:2.5rem; font-weight:900; background:linear-gradient(135deg,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.5rem; }
+    .auth-sub { color:rgba(160,157,192,0.7); font-size:0.9rem; margin-bottom:2rem; }
+    .btn-google {
+      width:100%; display:flex; align-items:center; justify-content:center; gap:0.75rem;
+      background:white; border:none; border-radius:14px; padding:1rem 1.5rem;
+      font-family:'Inter',sans-serif; font-weight:600; font-size:1rem; color:#1a1a2e;
+      cursor:pointer; transition:all 0.2s; box-shadow:0 4px 24px rgba(0,0,0,0.4);
+    }
+    .btn-google:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+    .btn-google:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+    .auth-note { margin-top:1rem; font-size:0.72rem; color:rgba(160,157,192,0.4); }
+    .auth-error { margin-top:0.75rem; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:0.65rem 1rem; font-size:0.78rem; color:#fca5a5; display:none; }
+    .spinner { width:22px; height:22px; border:2px solid rgba(0,0,0,0.15); border-top-color:#4285F4; border-radius:50%; animation:spin 0.7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .reveal { opacity:0; transform:translateY(18px); transition:opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity:1; transform:none; }
+  </style>
+</head>
+<body>
+
+<!-- AUTH GUARD OVERLAY (shown until user logs in) -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-logo">Limitless ⚡</div>
+    <p class="auth-sub">Sign in to access your transformation dashboard</p>
+    <button class="btn-google" id="google-signin-btn" onclick="signInWithGoogle()">
+      <svg width="20" height="20" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <div class="auth-error" id="auth-error"></div>
+    <p class="auth-note">Free forever · No credit card · Your data stays private</p>
+  </div>
+</div>
+
+<!-- DASHBOARD (hidden until logged in) -->
+<div id="dashboard" style="display:none">
+
+  <!-- Nav -->
+  <nav class="dash-nav">
+    <div class="dash-nav-logo">Limitless ⚡</div>
+    <div class="dash-user">
+      <img id="user-photo" src="" alt="User" onerror="this.style.display='none'" />
+      <span class="dash-user-name" id="user-name">Hero</span>
+      <button class="btn-logout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="dash-main">
+
+    <!-- Welcome -->
+    <div class="welcome-strip reveal">
+      <div class="welcome-text">
+        <h2 id="welcome-heading">Welcome back, Hero! 🚀</h2>
+        <p id="welcome-sub">Day 1 of your transformation. Every mission counts.</p>
+      </div>
+      <div class="streak-badge">🔥 <span id="streak-count">1</span> Day Streak</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row reveal">
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-level">Lv.1</div>
+        <div class="stat-card-lbl">Current Level</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-xp">0</div>
+        <div class="stat-card-lbl">Total XP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-done">0/6</div>
+        <div class="stat-card-lbl">Done Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-num" id="stat-score">50%</div>
+        <div class="stat-card-lbl">Life Score</div>
+      </div>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="d-card reveal">
+      <div class="d-card-title">XP Progress to Level 2</div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-labels">
+          <span id="xp-current-lbl">0 XP</span>
+          <span>100 XP</span>
+        </div>
+        <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Quote -->
+    <div class="quote-card reveal">
+      <div class="quote-text" id="daily-quote">"We are what we repeatedly do. Excellence, then, is not an act, but a habit."</div>
+      <div class="quote-author">— Aristotle</div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="dash-grid">
+
+      <!-- LEFT: Daily Missions -->
+      <div>
+        <div class="d-card reveal">
+          <div class="d-card-title">Today's Missions</div>
+          <div id="missions-list"></div>
+          <div class="xp-total">Earned today: <span id="xp-earned">0 XP</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <!-- Life Scores -->
+        <div class="d-card reveal">
+          <div class="d-card-title">Life Score</div>
+          <div id="life-scores"></div>
+        </div>
+
+        <!-- Journey Map -->
+        <div class="d-card reveal">
+          <div class="d-card-title">Your Journey</div>
+          <div class="journey-steps" id="journey-steps"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYjZqEI9teJW5GrlsIP6ppjGUrKPn4cOY",
+    authDomain: "limitless-94158.firebaseapp.com",
+    projectId: "limitless-94158",
+    storageBucket: "limitless-94158.firebasestorage.app",
+    messagingSenderId: "879930848858",
+    appId: "1:879930848858:web:1db0c9e6f9a6c8eb02ca63"
+  };
+
+  const app      = initializeApp(firebaseConfig);
+  const auth     = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Expose to global scope
+  window.signInWithGoogle = async () => {
+    const btn = document.getElementById('google-signin-btn');
+    const errEl = document.getElementById('auth-error');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Signing in...';
+    errEl.style.display = 'none';
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Continue with Google`;
+      errEl.textContent = err.code === 'auth/popup-closed-by-user' ? 'Sign-in cancelled. Try again.' : 'Google sign-in not enabled yet. Please try again shortly.';
+      errEl.style.display = 'block';
+    }
+  };
+
+  window.signOut = () => fbSignOut(auth);
+
+  // Auth state
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('auth-overlay').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      initDashboard(user);
+    } else {
+      document.getElementById('auth-overlay').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+  });
+
+  function initDashboard(user) {
+    const name = user.displayName || user.email?.split('@')[0] || 'Hero';
+    const firstName = name.split(' ')[0];
+
+    // Nav
+    const photoEl = document.getElementById('user-photo');
+    if (user.photoURL) { photoEl.src = user.photoURL; photoEl.style.display = 'block'; }
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('welcome-heading').textContent = `Welcome back, ${firstName}! 🚀`;
+
+    // Load saved data
+    const key = 'limitless_' + user.uid;
+    let data = JSON.parse(localStorage.getItem(key) || 'null');
+    if (!data) {
+      data = { xp: 0, level: 1, streak: 1, day: 1, lifeScores: { Health:50, Discipline:50, Finance:50, Mindset:50, Career:50, Learning:50, Relationships:50 }, completedToday: [], lastDate: new Date().toDateString() };
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+    // Reset daily missions if new day
+    if (data.lastDate !== new Date().toDateString()) {
+      data.completedToday = [];
+      data.day = (data.day || 1) + 1;
+      data.streak = (data.streak || 0) + 1;
+      data.lastDate = new Date().toDateString();
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    const day = data.day || 1;
+    document.getElementById('welcome-sub').textContent = `Day ${day} of your transformation. Every mission counts.`;
+    document.getElementById('streak-count').textContent = data.streak || 1;
+
+    // Missions pool
+    const missions = [
+      { id:'m1', title:'Wake up without snoozing', cat:'Discipline ⚡', xp:12 },
+      { id:'m2', title:'Drink 2L of water', cat:'Health 💪', xp:10 },
+      { id:'m3', title:'30 min workout or walk', cat:'Health 💪', xp:20 },
+      { id:'m4', title:'Read 10 pages of a book', cat:'Learning 📚', xp:10 },
+      { id:'m5', title:'5 min meditation / breathing', cat:'Mindset 🧠', xp:10 },
+      { id:'m6', title:'Write in your journal', cat:'Mindset 🧠', xp:12 },
+    ];
+
+    const ml = document.getElementById('missions-list');
+    let earnedXP = 0;
+
+    missions.forEach(m => {
+      const done = data.completedToday.includes(m.id);
+      if (done) earnedXP += m.xp;
+      const el = document.createElement('div');
+      el.className = 'mission-item' + (done ? ' done' : '');
+      el.id = 'mi-' + m.id;
+      el.innerHTML = `<div class="mission-check"></div><div class="mission-info"><div class="mission-title">${m.title}</div><div class="mission-cat">${m.cat}</div></div><div class="mission-xp">+${m.xp} XP</div>`;
+      el.onclick = () => {
+        const idx = data.completedToday.indexOf(m.id);
+        if (idx > -1) { data.completedToday.splice(idx, 1); data.xp -= m.xp; }
+        else { data.completedToday.push(m.id); data.xp += m.xp; }
+        localStorage.setItem(key, JSON.stringify(data));
+        updateUI(data, missions);
+      };
+      ml.appendChild(el);
+    });
+
+    updateUI(data, missions);
+
+    // Life scores
+    const colors = ['linear-gradient(90deg,#22d3ee,#6366f1)','linear-gradient(90deg,#8b5cf6,#6366f1)','linear-gradient(90deg,#f59e0b,#f97316)','linear-gradient(90deg,#f472b6,#8b5cf6)','linear-gradient(90deg,#22d3ee,#0ea5e9)','linear-gradient(90deg,#34d399,#22d3ee)','linear-gradient(90deg,#a78bfa,#f472b6)'];
+    const ls = document.getElementById('life-scores');
+    Object.entries(data.lifeScores).forEach(([name, val], i) => {
+      ls.innerHTML += `<div class="score-row"><div class="score-label"><span class="score-name">${name}</span><span class="score-val">${val}%</span></div><div class="score-bar"><div class="score-fill" style="width:${val}%;background:${colors[i%colors.length]}"></div></div></div>`;
+    });
+
+    // Journey steps
+    const steps = [
+      { label:'🌱', title:'Day 1 — Start', sub:'Begin your journey', status: day >= 1 ? (day > 1 ? 'done' : 'active') : 'upcoming' },
+      { label:'🔥', title:'Week 1 — Habit Lock', sub:'7 days consistent', status: day >= 7 ? (day > 7 ? 'done' : 'active') : 'upcoming' },
+      { label:'💪', title:'Day 30 — First Milestone', sub:'30 days of discipline', status: day >= 30 ? (day > 30 ? 'done' : 'active') : 'upcoming' },
+      { label:'⚡', title:'Day 90 — Transformed', sub:'90 days = new identity', status: day >= 90 ? 'done' : 'upcoming' },
+      { label:'👑', title:'HERO Status', sub:'You made it', status: day >= 90 ? 'done' : 'upcoming' },
+    ];
+    const js = document.getElementById('journey-steps');
+    steps.forEach((s, i) => {
+      const isLast = i === steps.length - 1;
+      js.innerHTML += `<div class="j-step"><div class="j-step-line"><div class="j-dot ${s.status}">${s.label}</div>${!isLast ? '<div class="j-line"></div>' : ''}</div><div class="j-content"><div class="j-title">${s.title}</div><div class="j-sub">${s.sub}</div></div></div>`;
+    });
+
+    // Quotes
+    const quotes = [
+      { q:'"We are what we repeatedly do. Excellence is not an act, but a habit."', a:'Aristotle' },
+      { q:'"Do not wait to strike till the iron is hot; make it hot by striking."', a:'William Yeats' },
+      { q:'"The secret of your future is hidden in your daily routine."', a:'Mike Murdock' },
+      { q:'"Small disciplines repeated with consistency every day lead to great achievements."', a:'John Maxwell' },
+      { q:'"You don\'t rise to the level of your goals. You fall to the level of your systems."', a:'James Clear' },
+    ];
+    const q = quotes[day % quotes.length];
+    document.getElementById('daily-quote').textContent = q.q;
+    document.querySelector('.quote-author').textContent = '— ' + q.a;
+
+    // Reveal animation
+    setTimeout(() => document.querySelectorAll('.reveal').forEach((el,i) => setTimeout(() => el.classList.add('visible'), i * 80)), 100);
+  }
+
+  function updateUI(data, missions) {
+    const done = data.completedToday.length;
+    let earned = 0;
+    missions.forEach(m => { if (data.completedToday.includes(m.id)) earned += m.xp; });
+
+    // Update mission items
+    missions.forEach(m => {
+      const el = document.getElementById('mi-' + m.id);
+      if (!el) return;
+      const isDone = data.completedToday.includes(m.id);
+      el.className = 'mission-item' + (isDone ? ' done' : '');
+    });
+
+    // Stats
+    document.getElementById('stat-xp').textContent = data.xp;
+    document.getElementById('stat-done').textContent = `${done}/${missions.length}`;
+    document.getElementById('stat-level').textContent = `Lv.${Math.floor(data.xp / 100) + 1}`;
+    const avgScore = Math.round(Object.values(data.lifeScores).reduce((a,b)=>a+b,0)/7);
+    document.getElementById('stat-score').textContent = avgScore + '%';
+    document.getElementById('xp-earned').textContent = earned + ' XP';
+
+    // XP bar
+    const xpInLevel = data.xp % 100;
+    document.getElementById('xp-bar-fill').style.width = xpInLevel + '%';
+    document.getElementById('xp-current-lbl').textContent = xpInLevel + ' XP';
+    const lvl = Math.floor(data.xp / 100) + 1;
+    document.getElementById('stat-level').textContent = 'Lv.' + lvl;
+    document.querySelector('.d-card-title').textContent = `XP Progress to Level ${lvl + 1}`;
+  }
+</script>
+
+</body>
+</html>
