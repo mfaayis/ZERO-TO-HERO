@@ -1,0 +1,6 @@
+{
+  "name": "Zero to Hero",
+  "description": "Become the Best Version of Yourself. Track habits, achieve goals, build discipline, and transform your life with Gemini AI coaching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

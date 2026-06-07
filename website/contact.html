@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Limitless Self-Development</title>
+  <meta name="description" content="Get in touch with the Limitless team. Start your self-development journey, ask about programs, or book a coaching session." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .contact-layout {
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 4rem; align-items: start;
+    }
+    .contact-info h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.025em; }
+    .contact-info p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 2rem; }
+
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+      transition: all var(--transition);
+    }
+    .contact-item:hover {
+      border-color: var(--border-bright);
+      transform: translateX(4px);
+    }
+    .contact-item-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .contact-item-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+    .contact-item-value { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
+
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      backdrop-filter: blur(20px);
+    }
+    .contact-form-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem;
+    }
+    .contact-form-card > p { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      width: 100%;
+      transition: border-color var(--transition);
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a5870' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+    }
+    .form-select:focus { outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(139,92,246,0.1); }
+    .form-select option { background: #0c0c18; }
+
+    .submit-btn {
+      width: 100%; padding: 1rem;
+      background: var(--gradient-hero);
+      color: white; border: none;
+      border-radius: 99px;
+      font-family: var(--font-display);
+      font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all var(--transition);
+      box-shadow: 0 0 30px rgba(139,92,246,0.35);
+      margin-top: 1.5rem;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(139,92,246,0.5); }
+    .submit-btn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+
+    .success-state {
+      display: none; text-align: center; padding: 2rem;
+    }
+    .success-state.visible { display: block; }
+    .success-icon {
+      width: 64px; height: 64px;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .faq { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-question {
+      width: 100%; background: none; border: none;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 0;
+      font-family: var(--font-body);
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer; text-align: left;
+      transition: color var(--transition);
+    }
+    .faq-question:hover { color: var(--purple-400); }
+    .faq-question .icon {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: var(--text-muted);
+      transition: all var(--transition);
+    }
+    .faq-item.open .faq-question .icon {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.3);
+      color: var(--purple-400);
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.3s ease;
+      color: var(--text-secondary); font-size: 0.9rem; line-height: 1.75;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding-bottom: 1.4rem;
+    }
+
+    @media (max-width: 768px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">Limitless ⚡</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="index.html#pricing" class="nav-cta">Start Free</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-tag reveal" style="margin:0 auto 1.5rem;display:inline-flex">Get in Touch</div>
+    <h1 class="heading-xl reveal reveal-delay-1">
+      Your Transformation<br><span class="gradient-text">Starts Here</span>
+    </h1>
+    <p class="text-secondary reveal reveal-delay-2" style="max-width:520px;margin:1.5rem auto 0;font-size:1.05rem;line-height:1.75">
+      Questions? Ready to start? Want to book a coaching call? We respond to every message within 24 hours.
+    </p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT MAIN -->
+<section class="section-pad">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Left: Info -->
+      <div class="reveal">
+        <h2>Let's Talk,<br><span class="gradient-text">Hero</span></h2>
+        <p>Whether you have a question about our programs, want to book a coaching call, or just want to see if Limitless is right for you — reach out. We're real people who genuinely care about your growth.</p>
+
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div>
+            <div class="contact-item-label">Email Us</div>
+            <div class="contact-item-value">hello@limitless.app</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div>
+            <div class="contact-item-label">Call Us</div>
+            <div class="contact-item-value">+1 (555) 000-HERO</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏱️</div>
+          <div>
+            <div class="contact-item-label">Response Time</div>
+            <div class="contact-item-value">Within 24 hours, guaranteed</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-label">Location</div>
+            <div class="contact-item-value">San Francisco, CA (Global Team)</div>
+          </div>
+        </div>
+
+        <div style="margin-top:2rem">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem">Follow the Movement</div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+            <a href="#" class="btn btn-ghost" style="padding:0.6rem 1.2rem;font-size:0.82rem">𝕏 Twitter</a>
+            <a href="#" class="btn btn-ghost" style="padding:0.6rem 1.2rem;font-size:0.82rem">▶ YouTube</a>
+            <a href="#" class="btn btn-ghost" style="padding:0.6rem 1.2rem;font-size:0.82rem">📸 Instagram</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="contact-form-card reveal reveal-delay-2">
+        <h3>Send a Message</h3>
+        <p>Fill out the form and our team will get back to you shortly.</p>
+
+        <div id="contact-form-wrapper">
+          <form id="contact-form" novalidate>
+            <div class="form-row" style="margin-bottom:1rem">
+              <div class="form-group">
+                <label class="form-label" for="contact-name">Your Name</label>
+                <input type="text" id="contact-name" class="form-input" placeholder="Alex Rivers" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contact-email">Email Address</label>
+                <input type="email" id="contact-email" class="form-input" placeholder="alex@email.com" required />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:1rem">
+              <label class="form-label" for="contact-topic">I'm Reaching Out About</label>
+              <select id="contact-topic" class="form-select" required>
+                <option value="" disabled selected>Select a topic</option>
+                <option value="start">Getting Started / Free Trial</option>
+                <option value="coaching">1-on-1 Coaching Session</option>
+                <option value="program">A Specific Program</option>
+                <option value="enterprise">Team / Enterprise Plan</option>
+                <option value="support">Account Support</option>
+                <option value="other">Something Else</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:1rem">
+              <label class="form-label" for="contact-goal">Your #1 Goal Right Now</label>
+              <input type="text" id="contact-goal" class="form-input" placeholder="e.g. Build discipline, lose 20 lbs, land a new job..." />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="contact-message">Message</label>
+              <textarea id="contact-message" class="form-input" placeholder="Tell us more about what you're working on and how we can help..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="contact-submit">
+              Send Message
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="success-state" id="contact-success">
+          <div class="success-icon">✓</div>
+          <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;margin-bottom:0.5rem">Message Sent!</h3>
+          <p style="color:var(--text-secondary);font-size:0.9rem">We'll reply within 24 hours. In the meantime, explore our programs or join the community.</p>
+          <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1.5rem">
+            <a href="services.html" class="btn btn-primary" style="font-size:0.88rem;padding:0.7rem 1.5rem">View Programs</a>
+            <a href="index.html" class="btn btn-ghost" style="font-size:0.88rem;padding:0.7rem 1.5rem">Back Home</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<section class="section-pad">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <div class="section-tag">FAQ</div>
+      <h2 class="heading-lg">Common <span class="gradient-text">Questions</span></h2>
+    </div>
+    <div class="faq reveal">
+      <div class="faq-item">
+        <button class="faq-question">
+          How is Limitless different from other self-development apps?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">Limitless combines gamification, real AI coaching, and a genuine community into one seamless system. Most apps give you tools but no accountability. We give you a whole operating system for your life — with XP, levels, streaks, and an AI that actually knows your data.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Is the AI coach actually useful or just a chatbot?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">The AI coach is powered by Gemini and has full access to your life score metrics, task history, habits, and journal entries. It generates hyper-specific strategies based on your actual data — not generic advice. Users consistently say it's the most useful part of the platform.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Can I cancel my subscription at any time?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">Yes, always. No lock-ins, no cancellation fees, no questions asked. Cancel in one click from your account settings. We'd rather earn your membership every month than trap you.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          What happens to my data if I cancel?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">Your data belongs to you. You can export everything — journal entries, task history, analytics — at any time. We retain your profile for 30 days after cancellation in case you want to reactivate, then it's permanently deleted on request.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Do you offer team or corporate plans?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">Yes! We offer custom enterprise plans for teams of 5+ people. This includes team dashboards, manager oversight, group challenges, and bulk pricing. Contact us using the form above and select "Team / Enterprise Plan" to get a custom quote.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          How quickly will I see results?
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">Most users report measurable improvements in their first 2 weeks — better sleep, higher energy, more consistent routines. Significant life score gains typically happen between day 30–90. The key is daily consistency. The platform is built to make that as easy as possible.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-pad-sm">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner-content">
+        <h2>Stop Waiting. <span class="gradient-text">Start Winning.</span></h2>
+        <p>Your future self is waiting. Every day you delay is a day of compound interest lost.</p>
+        <div class="cta-actions">
+          <a href="index.html#pricing" class="btn btn-primary">Start Free Today</a>
+          <a href="services.html" class="btn btn-ghost">View All Programs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.3rem">Limitless ⚡</div>
+        <p>The premium self-development platform for people who refuse to settle for average.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Platform</div>
+        <ul class="footer-links">
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="services.html">Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Limitless. All rights reserved.</span>
+      <span>Built for Heroes. ⚡</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Limitless Self-Development Programs</title>
+  <meta name="description" content="Explore Limitless coaching, courses, and community programs designed to transform your discipline, health, finance, and career." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .service-hero-card {
+      background: var(--gradient-card);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+      margin-bottom: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .service-hero-card::before {
+      content: '';
+      position: absolute; top: -50%; right: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(139,92,246,0.15), transparent);
+      border-radius: 50%;
+    }
+    .service-hero-card-content { position: relative; z-index: 1; }
+    .service-category {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--purple-400); margin-bottom: 0.75rem;
+    }
+    .service-hero-card h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.025em; }
+    .service-hero-card p { color: var(--text-secondary); line-height: 1.75; margin-bottom: 1.5rem; font-size: 0.92rem; }
+    .service-visual {
+      position: relative; z-index: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .service-stat-row {
+      display: flex; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .service-stat { text-align: center; }
+    .service-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .service-stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .service-pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.2);
+      border-radius: 99px;
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--purple-400);
+      margin: 0.25rem;
+    }
+
+    .programs-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .program-card { position: relative; }
+    .program-duration {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(5,5,13,0.8);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+    }
+    .program-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .program-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .program-card p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.25rem; }
+    .program-tag { font-size: 0.72rem; font-weight: 600; color: var(--cyan-400); background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.15); padding: 0.2rem 0.6rem; border-radius: 99px; }
+
+    .comparison-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .comparison-table th {
+      padding: 1rem 1.5rem;
+      font-family: var(--font-display);
+      font-size: 0.82rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      background: rgba(139,92,246,0.06);
+      border-bottom: 1px solid var(--border);
+      text-align: left; color: var(--text-secondary);
+    }
+    .comparison-table th:first-child { color: var(--text-muted); }
+    .comparison-table td {
+      padding: 1rem 1.5rem;
+      font-size: 0.88rem; color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .check-yes { color: var(--purple-400); font-weight: 700; }
+    .check-no  { color: var(--text-muted); }
+
+    @media (max-width: 768px) {
+      .service-hero-card { grid-template-columns: 1fr; }
+      .programs-grid { grid-template-columns: 1fr; }
+      .service-stat-row { justify-content: space-around; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">Limitless ⚡</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html#pricing" class="nav-cta">Start Free</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-tag reveal" style="margin:0 auto 1.5rem;display:inline-flex">Our Programs</div>
+    <h1 class="heading-xl reveal reveal-delay-1">
+      Every Tool You Need<br><span class="gradient-text">to Transform</span>
+    </h1>
+    <p class="text-secondary reveal reveal-delay-2" style="max-width:560px;margin:1.5rem auto 0;font-size:1.05rem;line-height:1.75">
+      Three core services designed to attack every obstacle standing between you and the life you want.
+    </p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FLAGSHIP SERVICES -->
+<section class="section-pad">
+  <div class="container">
+
+    <!-- AI Coaching -->
+    <div class="service-hero-card reveal">
+      <div class="service-hero-card-content">
+        <div class="service-category">⚡ Core Service</div>
+        <h2>AI Life Coaching</h2>
+        <p>Your personal Gemini-powered coach that analyzes your daily data, learns your patterns, and delivers brutally honest, hyper-personalized daily strategies. Available 24/7 — no appointments, no waiting.</p>
+        <div style="margin-bottom:1.5rem">
+          <span class="service-pill">Daily Recommendations</span>
+          <span class="service-pill">Progress Analysis</span>
+          <span class="service-pill">Habit Optimization</span>
+          <span class="service-pill">Goal Pathfinding</span>
+        </div>
+        <a href="index.html#pricing" class="btn btn-primary">Get AI Coaching</a>
+      </div>
+      <div class="service-visual">
+        <div class="service-stat-row">
+          <div class="service-stat">
+            <div class="service-stat-num">24/7</div>
+            <div class="service-stat-label">Availability</div>
+          </div>
+          <div class="service-stat">
+            <div class="service-stat-num">∞</div>
+            <div class="service-stat-label">Messages</div>
+          </div>
+          <div class="service-stat">
+            <div class="service-stat-num">1s</div>
+            <div class="service-stat-label">Response Time</div>
+          </div>
+        </div>
+        <div class="card" style="padding:1rem;margin-top:0.5rem">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.5rem">AI Coach · Just now</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6">"Your discipline score dropped 8 points this week. Based on your data, you're skipping morning workouts on Wednesdays. Here's a 3-step protocol to fix it..."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div class="service-hero-card reveal" style="margin-top:2rem">
+      <div class="service-visual" style="order:-1">
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="card" style="padding:1rem;display:flex;align-items:center;gap:1rem">
+            <span style="font-size:1.5rem">💪</span>
+            <div>
+              <div style="font-size:0.85rem;font-weight:600">30-Day Discipline Protocol</div>
+              <div class="progress-bar" style="margin-top:0.4rem"><div class="progress-fill" style="width:63%"></div></div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.3rem">Day 19 of 30 · 63% Complete</div>
+            </div>
+          </div>
+          <div class="card" style="padding:1rem;display:flex;align-items:center;gap:1rem">
+            <span style="font-size:1.5rem">🧠</span>
+            <div>
+              <div style="font-size:0.85rem;font-weight:600">Elite Mindset Foundations</div>
+              <div class="progress-bar" style="margin-top:0.4rem"><div class="progress-fill" style="width:100%"></div></div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.3rem">✓ Completed · +150 XP Earned</div>
+            </div>
+          </div>
+          <div class="card" style="padding:1rem;display:flex;align-items:center;gap:1rem">
+            <span style="font-size:1.5rem">💰</span>
+            <div>
+              <div style="font-size:0.85rem;font-weight:600">Financial Freedom Bootcamp</div>
+              <div class="progress-bar" style="margin-top:0.4rem"><div class="progress-fill" style="width:12%"></div></div>
+              <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.3rem">Just started · Day 4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="service-hero-card-content">
+        <div class="service-category">📚 Structured Learning</div>
+        <h2>Challenge Courses</h2>
+        <p>Proven 14–90 day challenge programs built by elite coaches and behavioral scientists. Each course comes with daily missions, accountability checkpoints, and a community of people on the same path.</p>
+        <div style="margin-bottom:1.5rem">
+          <span class="service-pill">14–90 Day Tracks</span>
+          <span class="service-pill">XP Rewards</span>
+          <span class="service-pill">Badge System</span>
+          <span class="service-pill">Peer Accountability</span>
+        </div>
+        <a href="index.html#pricing" class="btn btn-primary">Browse Courses</a>
+      </div>
+    </div>
+
+    <!-- Community -->
+    <div class="service-hero-card reveal" style="margin-top:2rem">
+      <div class="service-hero-card-content">
+        <div class="service-category">🌐 Elite Network</div>
+        <h2>Hero Community</h2>
+        <p>A private, high-signal community of 50,000+ driven people sharing wins, strategies, and accountability. No spam. No negativity. Just relentless growth and mutual elevation.</p>
+        <div style="margin-bottom:1.5rem">
+          <span class="service-pill">Live Feeds</span>
+          <span class="service-pill">Achievement Sharing</span>
+          <span class="service-pill">Peer Mentorship</span>
+          <span class="service-pill">Weekly Challenges</span>
+        </div>
+        <a href="index.html#pricing" class="btn btn-primary">Join the Community</a>
+      </div>
+      <div class="service-visual">
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="card" style="padding:1rem">
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+              <img style="width:28px;height:28px;border-radius:50%;object-fit:cover" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&q=80&fit=crop" alt="">
+              <div style="font-size:0.8rem;font-weight:600">Alex Rivers <span style="color:var(--text-muted);font-weight:400">· 2h ago</span></div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-secondary)">Day 30 complete! No sugar challenge DONE. Energy levels are insane 🔥</div>
+            <div class="stat-badge" style="margin-top:0.5rem">🏆 Badge Unlocked</div>
+          </div>
+          <div class="card" style="padding:1rem">
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem">
+              <img style="width:28px;height:28px;border-radius:50%;object-fit:cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&q=80&fit=crop" alt="">
+              <div style="font-size:0.8rem;font-weight:600">Elena P. <span style="color:var(--text-muted);font-weight:400">· 5h ago</span></div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text-secondary)">Hit Level 10 today! 10k savings goal complete. Discipline WORKS. 💎</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ALL PROGRAMS -->
+<section class="section-pad" style="background:radial-gradient(ellipse at 50% 50%,rgba(99,102,241,0.05) 0%,transparent 70%)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <div class="section-tag">All Courses</div>
+      <h2 class="heading-lg">Pick Your <span class="gradient-text">Transformation Path</span></h2>
+    </div>
+    <div class="programs-grid">
+      <div class="card program-card reveal reveal-delay-1">
+        <div class="program-duration">30 Days</div>
+        <div class="program-icon">💪</div>
+        <h3>Discipline Warrior Protocol</h3>
+        <p>The flagship program. 30 consecutive days of strict habits, cold exposure, and ruthless daily missions. For those ready to go to war with average.</p>
+        <div class="program-tag">Most Intense</div>
+      </div>
+      <div class="card program-card reveal reveal-delay-2">
+        <div class="program-duration">21 Days</div>
+        <div class="program-icon">🌅</div>
+        <h3>Indestructible Morning Routine</h3>
+        <p>21 days of waking at 5:30 AM, hydration rituals, and core workouts before your day begins. The routine that top performers swear by.</p>
+        <div class="program-tag">Best Seller</div>
+      </div>
+      <div class="card program-card reveal reveal-delay-3">
+        <div class="program-duration">90 Days</div>
+        <div class="program-icon">💰</div>
+        <h3>Financial Freedom Bootcamp</h3>
+        <p>Track every dollar, eliminate 3 expenses per week, and build your first emergency fund. A real money transformation — not theory.</p>
+        <div class="program-tag">High Impact</div>
+      </div>
+      <div class="card program-card reveal reveal-delay-1">
+        <div class="program-duration">14 Days</div>
+        <div class="program-icon">📚</div>
+        <h3>Read 12 Books Challenge</h3>
+        <p>Commit to daily reading sessions. By the end of 90 days, you'll have absorbed more growth knowledge than most people do in a decade.</p>
+        <div class="program-tag">Quick Win</div>
+      </div>
+      <div class="card program-card reveal reveal-delay-2">
+        <div class="program-duration">30 Days</div>
+        <div class="program-icon">🚫🍭</div>
+        <h3>No Sugar Protocol</h3>
+        <p>Eliminate processed sugar completely for 30 days. Most users report 40% higher energy, better sleep, and visible body composition changes.</p>
+        <div class="program-tag">Health Focus</div>
+      </div>
+      <div class="card program-card reveal reveal-delay-3">
+        <div class="program-duration">60 Days</div>
+        <div class="program-icon">🧠</div>
+        <h3>Elite Mindset Architecture</h3>
+        <p>Stoic philosophy meets modern psychology. Rewire limiting beliefs, build mental toughness, and install the thought patterns of top performers.</p>
+        <div class="program-tag">Mindset</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPARISON TABLE -->
+<section class="section-pad">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:3rem" class="reveal">
+      <div class="section-tag">Compare Plans</div>
+      <h2 class="heading-lg">Which Plan is <span class="gradient-text">Right for You?</span></h2>
+    </div>
+    <div class="reveal" style="overflow-x:auto">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Starter (Free)</th>
+            <th>Pro Hero ($19/mo)</th>
+            <th>Elite ($49/mo)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Daily Task Missions</td>
+            <td><span class="check-yes">✓</span> Up to 5</td>
+            <td><span class="check-yes">✓</span> Unlimited</td>
+            <td><span class="check-yes">✓</span> Unlimited</td>
+          </tr>
+          <tr>
+            <td>Habit Tracker</td>
+            <td><span class="check-yes">✓</span> Basic</td>
+            <td><span class="check-yes">✓</span> Full</td>
+            <td><span class="check-yes">✓</span> Full</td>
+          </tr>
+          <tr>
+            <td>AI Life Coach</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span> Unlimited</td>
+            <td><span class="check-yes">✓</span> Priority</td>
+          </tr>
+          <tr>
+            <td>Analytics Dashboard</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Challenge Courses</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span> All Courses</td>
+            <td><span class="check-yes">✓</span> All Courses</td>
+          </tr>
+          <tr>
+            <td>Journal + AI Analysis</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>1-on-1 Human Coaching</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span> Monthly Session</td>
+          </tr>
+          <tr>
+            <td>Custom 90-Day Protocol</td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-no">—</span></td>
+            <td><span class="check-yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="index.html#pricing" class="btn btn-primary">View Full Pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-pad-sm">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner-content">
+        <h2>Pick Your Path. <span class="gradient-text">Start Today.</span></h2>
+        <p>Every journey starts with a single decision. Make yours now.</p>
+        <div class="cta-actions">
+          <a href="index.html#pricing" class="btn btn-primary">Start for Free</a>
+          <a href="contact.html" class="btn btn-ghost">Talk to a Coach</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.3rem">Limitless ⚡</div>
+        <p>The premium self-development platform for people who refuse to settle for average.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Platform</div>
+        <ul class="footer-links">
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="services.html">Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Limitless. All rights reserved.</span>
+      <span>Built for Heroes. ⚡</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

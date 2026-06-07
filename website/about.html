@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Limitless Self-Development</title>
+  <meta name="description" content="Learn the story behind Limitless — why we built the world's most powerful self-development platform and the mission that drives us." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── ABOUT-SPECIFIC STYLES ── */
+    .mission-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .mission-visual {
+      position: relative;
+    }
+    .mission-card-stack {
+      position: relative; height: 380px;
+    }
+    .mission-card-stack .card {
+      position: absolute;
+    }
+    .m-card-1 { top: 0; left: 0; right: 60px; padding: 1.5rem; }
+    .m-card-2 { bottom: 0; right: 0; left: 60px; padding: 1.5rem; }
+    .m-card-label {
+      font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+    }
+    .m-card-value {
+      font-family: var(--font-display);
+      font-size: 2.2rem; font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .m-card-desc { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.3rem; }
+
+    .values-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .value-num {
+      font-family: var(--font-display);
+      font-size: 3rem; font-weight: 900;
+      background: var(--gradient-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1; margin-bottom: 0.75rem;
+    }
+    .value-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .value-desc { font-size: 0.87rem; color: var(--text-secondary); line-height: 1.7; }
+
+    .team-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .team-card {
+      text-align: center;
+    }
+    .team-photo {
+      width: 100%; aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .team-card:hover .team-photo {
+      transform: scale(1.03);
+      box-shadow: var(--shadow-glow);
+    }
+    .team-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; }
+    .team-role { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    .timeline { max-width: 680px; margin: 0 auto; }
+    .timeline-item {
+      display: grid; grid-template-columns: 80px 1fr;
+      gap: 1.5rem; padding-bottom: 2.5rem; position: relative;
+    }
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute; left: 39px; top: 28px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-year {
+      font-family: var(--font-display);
+      font-size: 0.85rem; font-weight: 800;
+      color: var(--purple-400);
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.2);
+      border-radius: var(--radius-sm);
+      padding: 0.4rem 0.6rem;
+      text-align: center; height: fit-content;
+    }
+    .timeline-content h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .timeline-content p { font-size: 0.87rem; color: var(--text-secondary); line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      .mission-split { grid-template-columns: 1fr; }
+      .mission-card-stack { height: 280px; }
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">Limitless ⚡</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html#pricing" class="nav-cta">Start Free</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-tag reveal" style="margin:0 auto 1.5rem;display:inline-flex">Our Story</div>
+    <h1 class="heading-xl reveal reveal-delay-1">
+      We Built This Because<br><span class="gradient-text">We Needed It</span>
+    </h1>
+    <p class="text-secondary reveal reveal-delay-2" style="max-width:600px;margin:1.5rem auto 0;font-size:1.1rem;line-height:1.75">
+      Limitless was born from a simple frustration: every self-help tool was either too vague, too complex, or just not fun enough to stick with.
+    </p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- MISSION -->
+<section class="section-pad" id="mission">
+  <div class="container">
+    <div class="mission-split">
+      <div class="reveal">
+        <div class="section-tag">Our Mission</div>
+        <h2 class="heading-lg" style="margin:1rem 0">Make Discipline<br><span class="gradient-text">Addictive</span></h2>
+        <p class="text-secondary" style="margin-bottom:1.5rem;line-height:1.8">
+          We believe that the gap between who you are and who you want to be is just a matter of consistent daily action. Our job is to make taking that action so satisfying, so gamified, so measurable — that you actually want to do it.
+        </p>
+        <p class="text-secondary" style="margin-bottom:2rem;line-height:1.8">
+          No fluff. No motivational posters. Just data-driven systems that compound over time into extraordinary results.
+        </p>
+        <a href="services.html" class="btn btn-primary">Explore Our Programs</a>
+      </div>
+      <div class="mission-visual reveal reveal-delay-2">
+        <div class="mission-card-stack">
+          <div class="card m-card-1">
+            <div class="m-card-label">Community Growth</div>
+            <div class="m-card-value">50K+</div>
+            <div class="m-card-desc">Active members in 48 countries</div>
+            <div class="progress-bar" style="margin-top:0.75rem">
+              <div class="progress-fill" style="width:78%"></div>
+            </div>
+          </div>
+          <div class="card m-card-2">
+            <div class="m-card-label">Average Score Improvement</div>
+            <div class="m-card-value">+47%</div>
+            <div class="m-card-desc">Life score gain in first 90 days</div>
+            <div class="stat-badge" style="margin-top:0.75rem">
+              <span>↑ 12% this month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- VALUES -->
+<section class="section-pad" style="background:radial-gradient(ellipse at 50% 50%,rgba(99,102,241,0.05) 0%,transparent 70%)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <div class="section-tag">Core Principles</div>
+      <h2 class="heading-lg">What We <span class="gradient-text">Believe In</span></h2>
+    </div>
+    <div class="values-grid">
+      <div class="card reveal reveal-delay-1">
+        <div class="value-num">01</div>
+        <div class="value-title">Discipline Beats Motivation</div>
+        <p class="value-desc">Motivation is a feeling. Discipline is a skill. We build systems that work even when you don't feel like it.</p>
+      </div>
+      <div class="card reveal reveal-delay-2">
+        <div class="value-num">02</div>
+        <div class="value-title">Measurement Creates Progress</div>
+        <p class="value-desc">What gets tracked gets improved. We obsess over giving you clear, honest data about every area of your life.</p>
+      </div>
+      <div class="card reveal reveal-delay-3">
+        <div class="value-num">03</div>
+        <div class="value-title">Community Compounds Results</div>
+        <p class="value-desc">Isolation kills momentum. Surrounding yourself with driven people makes the impossible feel inevitable.</p>
+      </div>
+      <div class="card reveal reveal-delay-1">
+        <div class="value-num">04</div>
+        <div class="value-title">Small Daily Wins Stack Up</div>
+        <p class="value-desc">1% better every day equals 37x better in a year. We engineer your daily actions for maximum compound interest.</p>
+      </div>
+      <div class="card reveal reveal-delay-2">
+        <div class="value-num">05</div>
+        <div class="value-title">AI Supercharges Humans</div>
+        <p class="value-desc">Technology should amplify your best self — not replace it. Our AI coach gives you elite-level feedback without the ego.</p>
+      </div>
+      <div class="card reveal reveal-delay-3">
+        <div class="value-num">06</div>
+        <div class="value-title">No Average Allowed</div>
+        <p class="value-desc">We build for people who refuse to settle. If you're comfortable staying average, we're probably not for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TEAM -->
+<section class="section-pad">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <div class="section-tag">The Team</div>
+      <h2 class="heading-lg">Built by People Who <span class="gradient-text">Live This</span></h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card card reveal reveal-delay-1">
+        <img class="team-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80&fit=crop" alt="Founder">
+        <div class="team-name">Raj Mehta</div>
+        <div class="team-role">CEO & Founder</div>
+      </div>
+      <div class="team-card card reveal reveal-delay-2">
+        <img class="team-photo" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80&fit=crop" alt="Co-Founder">
+        <div class="team-name">Sofia Chen</div>
+        <div class="team-role">CPO & Co-Founder</div>
+      </div>
+      <div class="team-card card reveal reveal-delay-3">
+        <img class="team-photo" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&q=80&fit=crop" alt="CTO">
+        <div class="team-name">Marcus Lee</div>
+        <div class="team-role">CTO</div>
+      </div>
+      <div class="team-card card reveal reveal-delay-4">
+        <img class="team-photo" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&q=80&fit=crop" alt="Head of Coaching">
+        <div class="team-name">Amara Osei</div>
+        <div class="team-role">Head of Coaching</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- STORY / TIMELINE -->
+<section class="section-pad">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:4rem" class="reveal">
+      <div class="section-tag">Our Journey</div>
+      <h2 class="heading-lg">The <span class="gradient-text">Road So Far</span></h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-year">2022</div>
+        <div class="timeline-content">
+          <h3>The Idea is Born</h3>
+          <p>After struggling with burnout and inconsistency, Raj builds a personal spreadsheet to track daily habits. Friends ask for access. The idea clicks.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2023</div>
+        <div class="timeline-content">
+          <h3>First 1,000 Users</h3>
+          <p>A beta app launches. 1,000 early adopters join in the first two weeks. User results are astonishing — 89% report measurable improvements in 30 days.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2024</div>
+        <div class="timeline-content">
+          <h3>AI Integration</h3>
+          <p>We integrate Gemini AI into the coaching core, creating the first truly adaptive, personalized life coach that learns from your data.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2025</div>
+        <div class="timeline-content">
+          <h3>50,000 Heroes</h3>
+          <p>The community crosses 50,000 active members across 48 countries. Limitless becomes the #1 rated self-development app on Product Hunt.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-content">
+          <h3>The Next Chapter</h3>
+          <p>Enterprise team programs, live coaching cohorts, and a global Hero Summit. We're just getting started.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-pad-sm">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner-content">
+        <h2>Join the <span class="gradient-text">Movement</span></h2>
+        <p>50,000 people chose to stop being average. Be next.</p>
+        <div class="cta-actions">
+          <a href="index.html#pricing" class="btn btn-primary">Start Free Today</a>
+          <a href="contact.html" class="btn btn-ghost">Talk to Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="font-size:1.3rem">Limitless ⚡</div>
+        <p>The premium self-development platform for people who refuse to settle for average.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Platform</div>
+        <ul class="footer-links">
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#pricing">Pricing</a></li>
+          <li><a href="services.html">Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Limitless. All rights reserved.</span>
+      <span>Built for Heroes. ⚡</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
