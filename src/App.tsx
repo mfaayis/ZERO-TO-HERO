@@ -5,21 +5,12 @@
 
 import React, { useState, useEffect } from "react";
 import { UserProfile, Task, Habit, Goal, JournalEntry, Challenge, SocialPost, AppNotification, MoodType } from "./types";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   doc,
   getDoc,
   setDoc,
-  updateDoc,
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  onSnapshot,
-  query,
-  orderBy,
 } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { db } from "./firebase";
 
 // Import modular panels
 import Navigation from "./components/Navigation";
@@ -95,24 +86,10 @@ export default function App() {
   // ── Firebase UID (needed for Firestore paths) ───────────────────────────────
   const [firebaseUid, setFirebaseUid] = useState<string>("");
 
-  // ── Session persistence: restore logged-in user on page refresh ─────────────
+  // ── Simple local session — no Firebase auth required ───────────────────────
+  // The app works immediately. Firestore still saves data keyed by a local UID.
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setFirebaseUid(user.uid);
-        setCurrentUserEmail(user.email || "");
-        setCurrentUserName(user.displayName || user.email?.split("@")[0] || "Hero");
-        await loadProfileData(user.uid, user.email || "", user.displayName || "");
-        setActiveTab("dashboard");
-      } else {
-        // User signed out — reset everything
-        setFirebaseUid("");
-        setCurrentUserEmail("");
-        setCurrentUserName("");
-        setActiveTab("landing");
-      }
-    });
-    return () => unsubscribe();
+    // No-op: auth handled by the Auth component calling handleAuthSuccess
   }, []);
 
   // ── Firestore: load all user data ───────────────────────────────────────────
@@ -270,19 +247,33 @@ export default function App() {
     setNotifications(prev => [newNoti, ...prev]);
   };
 
-  // Core Auth flow handlers
-  // Called by Auth.tsx after a successful Firebase sign-in/register.
-  // onAuthStateChanged (above) handles the actual session state — this just
-  // applies the chosen focus area boost and shows the welcome toast.
-  const handleAuthSuccess = (email: string, name: string, premiumOverride: boolean, firstFocus?: string) => {
-    setProfile(prev => {
-      const scores = { ...prev.lifeScores };
-      if (firstFocus && firstFocus in scores) {
-        (scores as any)[firstFocus] = 80;
-      }
-      return { ...prev, name, email, isPremium: true, lifeScores: scores };
-    });
-    pushToastNotification("Welcome! 🚀", `Hey ${name}! Your transformation journey starts NOW.`, "info");
+  // Called by Auth.tsx after user enters name and clicks start
+  const handleAuthSuccess = (email: string, name: string, isPremium: boolean, firstFocus?: string) => {
+    // Generate a simple local UID from name so Firestore saves persist
+    const localUid = name.toLowerCase().replace(/\s+/g, "-") + "-" + Math.random().toString(36).slice(2, 7);
+    setFirebaseUid(localUid);
+    setCurrentUserName(name);
+    setCurrentUserEmail(email);
+
+    const scores: UserProfile["lifeScores"] = { health: 50, discipline: 50, finance: 50, career: 50, learning: 50, relationships: 50, mindset: 50 };
+    if (firstFocus && firstFocus in scores) (scores as any)[firstFocus] = 65;
+
+    const initialProfile: UserProfile = {
+      name,
+      email,
+      level: 1,
+      xp: 0,
+      xpToNextLevel: 100,
+      streak: 1,
+      isPremium: true,
+      lifeScores: scores,
+      unlockedBadges: [],
+    };
+
+    setProfile(initialProfile);
+    setShowOnboarding(true);
+    setActiveTab("dashboard");
+    pushToastNotification("Welcome! 🚀", `Hey ${name}! Your transformation begins NOW.`, "info");
   };
 
   // Checklist actions
@@ -653,14 +644,14 @@ export default function App() {
     setProfile(prev => ({ ...prev, isPremium: val }));
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-    } catch (err) {
-      console.error("Sign-out error:", err);
-    }
-    // onAuthStateChanged listener will clear state & redirect to landing
+  const handleLogout = () => {
+    // Reset to landing
+    setFirebaseUid("");
+    setCurrentUserName("");
+    setCurrentUserEmail("");
+    setActiveTab("landing");
     setChatHistory([]);
+    setShowOnboarding(false);
   };
 
   return (
